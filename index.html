@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EstateElite — Premium Indian Properties</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="#" class="logo">
+      </span>
+      AuctionLeo<span></span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link active">Home</a></li>
+      <li><a href="#properties" class="nav-link">Properties</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-login" onclick="openModal('loginModal')">
+        <i class="fas fa-user-circle"></i> Login
+      </button>
+      <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80" alt="Luxury Property" />
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">🏆 India's Premier Real Estate Platform</div>
+    <h1 class="hero-title">Find Your<br /><em>Dream Home</em></h1>
+    <p class="hero-sub">Discover exclusive luxury properties across India's most sought-after locations</p>
+    <div class="hero-search">
+      <div class="search-group">
+        <i class="fas fa-map-marker-alt"></i>
+        <input type="text" placeholder="City, locality or landmark..." id="heroSearch" />
+      </div>
+      <select class="search-select">
+        <option>Property Type</option>
+        <option>Apartment</option>
+        <option>Villa</option>
+        <option>Plot</option>
+        <option>Commercial</option>
+        <option>Penthouse</option>
+      </select>
+      <select class="search-select">
+        <option>Budget</option>
+        <option>Under ₹50L</option>
+        <option>₹50L – ₹1Cr</option>
+        <option>₹1Cr – ₹3Cr</option>
+        <option>₹3Cr – ₹5Cr</option>
+        <option>Above ₹5Cr</option>
+      </select>
+      <button class="btn-search" onclick="scrollToProperties()">
+        <i class="fas fa-search"></i> Search
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong>2,400+</strong><span>Properties</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><strong>180+</strong><span>Cities</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><strong>12K+</strong><span>Happy Clients</span></div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint" onclick="scrollToProperties()">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- FEATURED PROPERTIES -->
+<section class="section" id="properties">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Handpicked for You</span>
+      <h2 class="section-title">Featured <em>Properties</em></h2>
+      <p class="section-sub">Explore our curated selection of premium real estate across India</p>
+    </div>
+    <div class="filter-tabs">
+      <button class="tab active" onclick="filterProperties('all', this)">All</button>
+      <button class="tab" onclick="filterProperties('apartment', this)">Apartments</button>
+      <button class="tab" onclick="filterProperties('villa', this)">Villas</button>
+      <button class="tab" onclick="filterProperties('plot', this)">Plots</button>
+      <button class="tab" onclick="filterProperties('commercial', this)">Commercial</button>
+      <button class="tab" onclick="filterProperties('penthouse', this)">Penthouse</button>
+    </div>
+    <div class="properties-grid" id="propertiesGrid">
+      <!-- Cards injected by JS -->
+    </div>
+    <div class="center-btn">
+      <button class="btn-outline" onclick="showAllProperties()">View All Properties <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- PROPERTY LISTING PAGE (hidden by default, shown via JS) -->
+<section class="section listing-section" id="listingSection" style="display:none;">
+  <div class="container-wide">
+    <div class="listing-layout">
+      <!-- SIDEBAR FILTERS -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3><i class="fas fa-sliders-h"></i> Filters</h3>
+          <button class="clear-filters" onclick="clearFilters()">Clear All</button>
+        </div>
+        <div class="filter-group">
+          <label>Search</label>
+          <div class="filter-input-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Location, name..." id="filterSearch" oninput="applyFilters()" />
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Location</label>
+          <select id="filterLocation" onchange="applyFilters()">
+            <option value="">All Locations</option>
+            <option>Mumbai</option><option>Delhi</option><option>Bangalore</option>
+            <option>Hyderabad</option><option>Pune</option><option>Chennai</option>
+            <option>Gurgaon</option><option>Noida</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Property Type</label>
+          <div class="checkbox-group" id="typeFilters">
+            <label class="checkbox-label"><input type="checkbox" value="apartment" onchange="applyFilters()"> Apartment</label>
+            <label class="checkbox-label"><input type="checkbox" value="villa" onchange="applyFilters()"> Villa</label>
+            <label class="checkbox-label"><input type="checkbox" value="plot" onchange="applyFilters()"> Plot</label>
+            <label class="checkbox-label"><input type="checkbox" value="commercial" onchange="applyFilters()"> Commercial</label>
+            <label class="checkbox-label"><input type="checkbox" value="penthouse" onchange="applyFilters()"> Penthouse</label>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Budget Range</label>
+          <select id="filterBudget" onchange="applyFilters()">
+            <option value="">Any Budget</option>
+            <option value="0-5000000">Under ₹50L</option>
+            <option value="5000000-10000000">₹50L – ₹1Cr</option>
+            <option value="10000000-30000000">₹1Cr – ₹3Cr</option>
+            <option value="30000000-50000000">₹3Cr – ₹5Cr</option>
+            <option value="50000000-999999999">Above ₹5Cr</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>BHK</label>
+          <div class="bhk-group">
+            <button class="bhk-btn" onclick="toggleBhk(this,'1')">1 BHK</button>
+            <button class="bhk-btn" onclick="toggleBhk(this,'2')">2 BHK</button>
+            <button class="bhk-btn" onclick="toggleBhk(this,'3')">3 BHK</button>
+            <button class="bhk-btn" onclick="toggleBhk(this,'4')">4+ BHK</button>
+          </div>
+        </div>
+      </aside>
+      <!-- LISTING GRID -->
+      <div class="listing-main">
+        <div class="listing-topbar">
+          <p class="result-count" id="resultCount">Showing 0 properties</p>
+          <select class="sort-select" onchange="sortProperties(this.value)">
+            <option value="default">Sort: Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="newest">Newest First</option>
+          </select>
+        </div>
+        <div class="properties-grid-list" id="listingGrid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="section about-section" id="about">
+  <div class="container">
+    <div class="about-layout">
+      <div class="about-images">
+        <img class="about-img-main" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80" alt="Luxury Interior" />
+        <img class="about-img-accent" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&q=80" alt="Property" />
+        <div class="about-badge-card">
+          <strong>15+</strong>
+          <span>Years of Excellence</span>
+        </div>
+      </div>
+      <div class="about-content">
+        <span class="section-tag">Who We Are</span>
+        <h2 class="section-title">India's Most <em>Trusted</em> Real Estate Platform</h2>
+        <p>EstateElite connects discerning buyers with India's finest properties. From sprawling villas in Gurgaon to sea-view apartments in Mumbai, we offer an unmatched selection for every vision.</p>
+        <p>Our platform ensures complete transparency, verified listings, and a seamless experience — whether you're buying, investing, or exploring.</p>
+        <div class="about-features">
+          <div class="about-feat"><i class="fas fa-shield-alt"></i><div><strong>Verified Listings</strong><span>Every property is verified by our team</span></div></div>
+          <div class="about-feat"><i class="fas fa-handshake"></i><div><strong>Trusted Network</strong><span>2,000+ verified developers & agents</span></div></div>
+          <div class="about-feat"><i class="fas fa-headset"></i><div><strong>24/7 Support</strong><span>Expert guidance round the clock</span></div></div>
+        </div>
+        <button class="btn-primary" onclick="openModal('loginModal')">Get Started <i class="fas fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="section contact-section" id="contact">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Get In Touch</span>
+      <h2 class="section-title">Let's Find Your <em>Perfect</em> Property</h2>
+    </div>
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="contact-card"><i class="fas fa-map-marker-alt"></i><div><strong>Office</strong><p>Sector 44, Gurugram, Haryana 122003</p></div></div>
+        <div class="contact-card"><i class="fas fa-phone-alt"></i><div><strong>Phone</strong><p>+91 98765 43210</p></div></div>
+        <div class="contact-card"><i class="fas fa-envelope"></i><div><strong>Email</strong><p>hello@estateelite.in</p></div></div>
+        <div class="contact-card"><i class="fas fa-clock"></i><div><strong>Working Hours</strong><p>Mon–Sat: 9 AM – 7 PM</p></div></div>
+      </div>
+      <form class="contact-form" onsubmit="submitContact(event)">
+        <div class="form-row">
+          <div class="form-group"><label>Full Name</label><input type="text" placeholder="Rahul Sharma" required /></div>
+          <div class="form-group"><label>Phone</label><input type="tel" placeholder="+91 9876543210" required /></div>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="rahul@email.com" required /></div>
+        <div class="form-group"><label>Message</label><textarea rows="4" placeholder="Tell us about your property requirements..."></textarea></div>
+        <button type="submit" class="btn-primary full-width">Send Message <i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo logo-light"><span class="logo-icon"><i class="fas fa-leaf"></i></span>Estate<span>Elite</span></a>
+          <p>India's premier platform for luxury and affordable real estate. Find your dream property with us.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#properties">Properties</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Property Types</h4>
+          <ul>
+            <li><a href="#">Apartments</a></li>
+            <li><a href="#">Villas</a></li>
+            <li><a href="#">Plots</a></li>
+            <li><a href="#">Commercial</a></li>
+            <li><a href="#">Penthouses</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Top Cities</h4>
+          <ul>
+            <li><a href="#">Mumbai</a></li>
+            <li><a href="#">Delhi NCR</a></li>
+            <li><a href="#">Bangalore</a></li>
+            <li><a href="#">Hyderabad</a></li>
+            <li><a href="#">Pune</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p>© 2025 EstateElite. All rights reserved. | Designed with ❤️ in India</p>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== MODALS ===== -->
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login', this)">Login</button>
+      <button class="auth-tab" onclick="switchAuthTab('signup', this)">Sign Up</button>
+    </div>
+    <!-- LOGIN FORM -->
+    <div class="auth-form" id="loginForm">
+      <div class="auth-header">
+        <h2>Welcome Back</h2>
+        <p>Sign in to access exclusive property details</p>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-wrap"><i class="fas fa-envelope"></i><input type="email" placeholder="you@email.com" /></div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap"><i class="fas fa-lock"></i><input type="password" placeholder="••••••••" id="loginPass" /></div>
+        <span class="eye-toggle" onclick="togglePass('loginPass')"><i class="fas fa-eye"></i></span>
+      </div>
+      <div class="form-row-flex">
+        <label class="checkbox-label"><input type="checkbox"> Remember me</label>
+        <a href="#" class="forgot-link" onclick="showForgotPassword()">Forgot Password?</a>
+      </div>
+      <button class="btn-primary full-width" onclick="handleLogin()">Sign In <i class="fas fa-arrow-right"></i></button>
+      <div class="auth-divider"><span>or continue with</span></div>
+      <button class="btn-google"><img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20" /> Continue with Google</button>
+    </div>
+    <!-- SIGNUP FORM -->
+    <div class="auth-form hidden" id="signupForm">
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p>Join thousands of happy property seekers</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><div class="input-wrap"><i class="fas fa-user"></i><input type="text" placeholder="Rahul" /></div></div>
+        <div class="form-group"><label>Last Name</label><div class="input-wrap"><i class="fas fa-user"></i><input type="text" placeholder="Sharma" /></div></div>
+      </div>
+      <div class="form-group"><label>Email</label><div class="input-wrap"><i class="fas fa-envelope"></i><input type="email" placeholder="rahul@email.com" /></div></div>
+      <div class="form-group"><label>Phone</label><div class="input-wrap"><i class="fas fa-phone"></i><input type="tel" placeholder="+91 9876543210" /></div></div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap"><i class="fas fa-lock"></i><input type="password" placeholder="Create a strong password" id="signupPass" /></div>
+        <span class="eye-toggle" onclick="togglePass('signupPass')"><i class="fas fa-eye"></i></span>
+      </div>
+      <button class="btn-primary full-width" onclick="handleSignup()">Create Account <i class="fas fa-arrow-right"></i></button>
+      <div class="auth-divider"><span>or continue with</span></div>
+      <button class="btn-google"><img src="https://www.svgrepo.com/show/475656/google-color.svg" width="20" /> Continue with Google</button>
+    </div>
+    <!-- FORGOT PASSWORD -->
+    <div class="auth-form hidden" id="forgotForm">
+      <div class="auth-header">
+        <h2>Reset Password</h2>
+        <p>Enter your email to receive reset instructions</p>
+      </div>
+      <div class="form-group"><label>Email Address</label><div class="input-wrap"><i class="fas fa-envelope"></i><input type="email" placeholder="you@email.com" /></div></div>
+      <button class="btn-primary full-width" onclick="handleForgot()">Send Reset Link <i class="fas fa-paper-plane"></i></button>
+      <p class="back-link" onclick="switchAuthTab('login', null)"><i class="fas fa-arrow-left"></i> Back to Login</p>
+    </div>
+  </div>
+</div>
+
+<!-- ACCESS PENDING MODAL -->
+<div class="modal-overlay" id="pendingModal" onclick="closeModalOutside(event,'pendingModal')">
+  <div class="modal pending-modal">
+    <button class="modal-close" onclick="closeModal('pendingModal')"><i class="fas fa-times"></i></button>
+    <div class="pending-content">
+      <div class="pending-icon"><i class="fas fa-hourglass-half"></i></div>
+      <h2>Access Pending Approval</h2>
+      <p>Your account has been created successfully. Our admin team is reviewing your profile and will grant access to property details shortly.</p>
+      <div class="pending-steps">
+        <div class="step done"><i class="fas fa-check-circle"></i><span>Account Created</span></div>
+        <div class="step-line done"></div>
+        <div class="step active"><i class="fas fa-clock"></i><span>Admin Review</span></div>
+        <div class="step-line"></div>
+        <div class="step"><i class="fas fa-unlock-alt"></i><span>Full Access</span></div>
+      </div>
+      <p class="pending-note">You'll receive an email at <strong>your@email.com</strong> once approved. This usually takes 24–48 hours.</p>
+      <button class="btn-primary" onclick="closeModal('pendingModal'); openDashboard()">Go to Dashboard <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- PROPERTY DETAIL MODAL -->
+<div class="modal-overlay" id="propertyModal" onclick="closeModalOutside(event,'propertyModal')">
+  <div class="modal property-modal">
+    <button class="modal-close" onclick="closeModal('propertyModal')"><i class="fas fa-times"></i></button>
+    <div id="propertyModalContent"></div>
+  </div>
+</div>
+
+<!-- USER DASHBOARD MODAL -->
+<div class="modal-overlay" id="dashboardModal" onclick="closeModalOutside(event,'dashboardModal')">
+  <div class="modal dashboard-modal">
+    <button class="modal-close" onclick="closeModal('dashboardModal')"><i class="fas fa-times"></i></button>
+    <div class="dashboard-layout">
+      <div class="dashboard-sidebar">
+        <div class="user-profile-card">
+          <div class="user-avatar"><i class="fas fa-user"></i></div>
+          <h3 id="dashUserName">Rahul Sharma</h3>
+          <p id="dashUserEmail">rahul@email.com</p>
+          <span class="status-badge pending">⏳ Pending Approval</span>
+        </div>
+        <nav class="dash-nav">
+          <button class="dash-nav-btn active" onclick="switchDashTab('overview', this)"><i class="fas fa-home"></i> Overview</button>
+          <button class="dash-nav-btn" onclick="switchDashTab('saved', this)"><i class="fas fa-heart"></i> Saved Properties</button>
+          <button class="dash-nav-btn" onclick="switchDashTab('viewed', this)"><i class="fas fa-eye"></i> Viewed</button>
+          <button class="dash-nav-btn" onclick="switchDashTab('profile', this)"><i class="fas fa-user-edit"></i> Edit Profile</button>
+          <button class="dash-nav-btn logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </nav>
+      </div>
+      <div class="dashboard-content" id="dashboardContent">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
